@@ -167,10 +167,10 @@ body {
 
 </div>
 
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<<script src="/socket.io/socket.io.js"></script>
 
 <script>
-const socket = io("http://localhost:3001");
+const socket = io();
 
 const input = document.getElementById("messageInput");
 const usernameInput = document.getElementById("usernameInput");
@@ -216,4 +216,5 @@ socket.on("receive_message", (data) => {
 </script>
 
 </body>
+
 </html>
