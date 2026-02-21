@@ -13,16 +13,55 @@ const io = new Server(server, {
   cors: { origin: "*" }
 });
 
+let users = {};
+let lastMessageTime = {};
+
 io.on("connection", (socket) => {
-  console.log("User connected");
+
+  socket.on("register_user", (username) => {
+
+    if (users[username]) {
+      socket.emit("username_taken");
+      return;
+    }
+
+    users[username] = socket.id;
+    socket.username = username;
+
+    io.emit("user_joined", username);
+  });
 
   socket.on("send_message", (data) => {
-    io.emit("receive_message", data);
+
+    const now = Date.now();
+
+    if (lastMessageTime[socket.id] &&
+        now - lastMessageTime[socket.id] < 1000) {
+      return; // anti spam
+    }
+
+    lastMessageTime[socket.id] = now;
+
+    io.emit("receive_message", {
+      user: data.user,
+      text: data.text
+    });
   });
+
+  socket.on("typing", (username) => {
+    socket.broadcast.emit("user_typing", username);
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.username) {
+      delete users[socket.username];
+      io.emit("user_left", socket.username);
+    }
+  });
+
 });
 
 const PORT = process.env.PORT || 3001;
-
 server.listen(PORT, () => {
   console.log("Server running...");
 });
