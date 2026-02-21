@@ -20,12 +20,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    io.to(data.room).emit("receive_message", data);
+    if (!data.room) return;
+
+    io.to(data.room).emit("receive_message", {
+      user: data.user,
+      text: data.text
+    });
   });
 
 });
 
 const PORT = process.env.PORT || 3001;
+
 server.listen(PORT, () => {
-  console.log("Server running...");
+  console.log("Server running on port " + PORT);
 });
