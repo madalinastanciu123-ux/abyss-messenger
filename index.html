@@ -13,20 +13,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #140f1f;
+    background: linear-gradient(135deg, #0f0b1a, #1b1230);
     font-family: Arial, sans-serif;
-    overflow: hidden;
 }
 
-/* Chat */
 .chat-card {
     width: 480px;
     height: 650px;
-    background: #1e1830;
-    border-radius: 18px;
+    backdrop-filter: blur(20px);
+    background: rgba(30,24,48,0.8);
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 50px rgba(124,58,237,0.3);
+    box-shadow: 0 0 60px rgba(124,58,237,0.4);
 }
 
 .chat-header {
@@ -47,11 +46,10 @@ body {
     gap: 10px;
 }
 
-/* Message bubble */
 .message-wrapper {
     display: flex;
-    align-items: flex-end;
     gap: 8px;
+    align-items: flex-end;
 }
 
 .mine {
@@ -76,23 +74,22 @@ body {
     border-radius: 12px;
     max-width: 60%;
     color: white;
+    animation: fadeIn 0.3s ease;
 }
 
 .mine .message {
     background: #7c3aed;
 }
 
-.typing {
-    font-size: 12px;
-    color: #c4b5fd;
-    padding: 5px 15px;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Input */
 .chat-input {
     display: flex;
     padding: 15px;
-    background: #2a2142;
+    background: rgba(40,30,70,0.8);
     gap: 8px;
 }
 
@@ -109,10 +106,15 @@ body {
     padding: 10px;
     border: none;
     border-radius: 8px;
-    background: #7c3aed;
+    background: linear-gradient(90deg, #7c3aed, #a855f7);
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.chat-input button:hover {
+    transform: scale(1.05);
 }
 </style>
 </head>
@@ -122,7 +124,6 @@ body {
 <div class="chat-card">
     <div class="chat-header">🖤 Abyss Messenger</div>
     <div id="messages" class="messages"></div>
-    <div id="typing" class="typing"></div>
     <div class="chat-input">
         <input id="usernameInput" placeholder="Username..." />
         <input id="messageInput" placeholder="Scrie mesaj..." />
@@ -130,46 +131,37 @@ body {
     </div>
 </div>
 
+<audio id="msgSound">
+    <source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg">
+</audio>
+
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
 const socket = io();
-
 const input = document.getElementById("messageInput");
 const usernameInput = document.getElementById("usernameInput");
 const messages = document.getElementById("messages");
-const typingDiv = document.getElementById("typing");
+const sound = document.getElementById("msgSound");
 
-let currentUser = "";
+const params = new URLSearchParams(window.location.search);
+const room = params.get("room") || "default";
 
-usernameInput.addEventListener("change", () => {
-    currentUser = usernameInput.value.trim();
-    socket.emit("register_user", currentUser);
-});
-
-socket.on("username_taken", () => {
-    alert("Username already taken!");
-    usernameInput.value = "";
-    currentUser = "";
-});
+socket.emit("join_room", room);
 
 window.sendMessage = function() {
     const message = input.value.trim();
-    if (!currentUser || !message) return;
+    const username = usernameInput.value.trim();
+    if (!username || !message) return;
 
     socket.emit("send_message", {
-        user: currentUser,
+        room: room,
+        user: username,
         text: message
     });
 
     input.value = "";
 };
-
-input.addEventListener("input", () => {
-    if (currentUser) {
-        socket.emit("typing", currentUser);
-    }
-});
 
 input.addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendMessage();
@@ -179,6 +171,8 @@ socket.on("receive_message", (data) => {
 
     const wrapper = document.createElement("div");
     wrapper.classList.add("message-wrapper");
+
+    const currentUser = usernameInput.value.trim();
 
     if (data.user === currentUser) {
         wrapper.classList.add("mine");
@@ -198,15 +192,11 @@ socket.on("receive_message", (data) => {
     } else {
         wrapper.appendChild(avatar);
         wrapper.appendChild(bubble);
+        sound.play();
     }
 
     messages.appendChild(wrapper);
     messages.scrollTop = messages.scrollHeight;
-});
-
-socket.on("user_typing", (username) => {
-    typingDiv.innerText = username + " is typing...";
-    setTimeout(() => typingDiv.innerText = "", 1500);
 });
 </script>
 
