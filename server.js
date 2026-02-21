@@ -13,50 +13,14 @@ const io = new Server(server, {
   cors: { origin: "*" }
 });
 
-let users = {};
-let lastMessageTime = {};
-
 io.on("connection", (socket) => {
 
-  socket.on("register_user", (username) => {
-
-    if (users[username]) {
-      socket.emit("username_taken");
-      return;
-    }
-
-    users[username] = socket.id;
-    socket.username = username;
-
-    io.emit("user_joined", username);
+  socket.on("join_room", (room) => {
+    socket.join(room);
   });
 
   socket.on("send_message", (data) => {
-
-    const now = Date.now();
-
-    if (lastMessageTime[socket.id] &&
-        now - lastMessageTime[socket.id] < 1000) {
-      return; // anti spam
-    }
-
-    lastMessageTime[socket.id] = now;
-
-    io.emit("receive_message", {
-      user: data.user,
-      text: data.text
-    });
-  });
-
-  socket.on("typing", (username) => {
-    socket.broadcast.emit("user_typing", username);
-  });
-
-  socket.on("disconnect", () => {
-    if (socket.username) {
-      delete users[socket.username];
-      io.emit("user_left", socket.username);
-    }
+    io.to(data.room).emit("receive_message", data);
   });
 
 });
