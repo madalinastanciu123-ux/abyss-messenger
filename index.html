@@ -20,7 +20,7 @@ body{
     font-family:'Poppins',sans-serif;
 }
 
-/* ⭐ STARS */
+/* ⭐ static stars */
 body::before{
     content:"";
     position:fixed;
@@ -31,15 +31,17 @@ body::before{
         radial-gradient(2px 2px at 40% 40%, white, transparent),
         radial-gradient(2px 2px at 60% 10%, white, transparent),
         radial-gradient(2px 2px at 80% 60%, white, transparent),
-        radial-gradient(2px 2px at 90% 30%, white, transparent);
+        radial-gradient(2px 2px at 90% 30%, white, transparent),
+        radial-gradient(2px 2px at 70% 80%, white, transparent),
+        radial-gradient(2px 2px at 15% 90%, white, transparent);
     opacity:0.8;
     pointer-events:none;
 }
 
-/* CHAT CARD */
+/* chat */
 .chat-card{
     width:480px;
-    height:88vh;
+    height:85vh;
     max-height:700px;
     background:rgba(30,24,48,0.95);
     border-radius:25px;
@@ -48,20 +50,19 @@ body::before{
     box-shadow:0 0 80px rgba(124,58,237,0.4);
     position:relative;
     overflow:hidden;
-    z-index:2;
 }
 
-/* 🐱 CAT */
+/* 🐱 black cat head */
 .cat{
     position:absolute;
-    top:-22px;
-    right:35px;
-    font-size:42px;
-    z-index:1;
+    top:-28px;
+    right:30px;
+    font-size:46px;
+    z-index:0;
     pointer-events:none;
 }
 
-/* HEADER */
+/* header */
 .chat-header{
     background:linear-gradient(90deg,#5b21b6,#9333ea);
     padding:18px;
@@ -70,9 +71,10 @@ body::before{
     font-size:20px;
     letter-spacing:2px;
     color:white;
+    z-index:1;
 }
 
-/* MESSAGES */
+/* messages */
 .messages{
     flex:1;
     padding:20px;
@@ -80,6 +82,7 @@ body::before{
     display:flex;
     flex-direction:column;
     gap:14px;
+    z-index:1;
 }
 
 .message{
@@ -97,18 +100,28 @@ body::before{
     margin-bottom:4px;
 }
 
-/* TYPING */
+/* shadow messages */
+.shadow-message{
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(255,77,109,0.4);
+    color:#ff9ab0;
+    font-style:italic;
+}
+
+/* typing */
 .typing{
     font-size:12px;
     color:#a78bfa;
     padding:0 20px 6px 20px;
+    z-index:1;
 }
 
-/* INPUT */
+/* input */
 .input-area{
     display:flex;
     gap:10px;
     padding:15px;
+    z-index:1;
 }
 
 input{
@@ -119,7 +132,6 @@ input{
     background:rgba(255,255,255,0.08);
     color:white;
     outline:none;
-    min-width:0;
 }
 
 button{
@@ -139,27 +151,28 @@ button{
     background:#352a54;
 }
 
-/* DONT PRESS */
+/* Don't Press in background */
 #dontPressBtn{
     position:absolute;
-    bottom:15px;
-    right:20px;
-    background:#1b102c;
+    bottom:110px;
+    right:25px;
+    opacity:0.25;
+    background:none;
+    border:1px dashed #ff4d6d;
     color:#ff4d6d;
-    border:1px solid #ff4d6d;
-    padding:6px 12px;
+    font-size:11px;
+    padding:4px 10px;
     border-radius:20px;
-    font-size:12px;
     transition:0.3s;
+    z-index:0;
 }
 
 #dontPressBtn:hover{
-    background:#ff4d6d;
-    color:white;
+    opacity:1;
     transform:scale(1.05);
 }
 
-/* EMOJI PANEL */
+/* emoji panel */
 .emoji-panel{
     position:absolute;
     bottom:85px;
@@ -171,6 +184,7 @@ button{
     flex-wrap:wrap;
     gap:8px;
     width:200px;
+    z-index:5;
 }
 
 .emoji-panel span{
@@ -183,7 +197,7 @@ button{
 
 <div class="chat-card">
 
-    <div class="cat">🐱</div>
+    <div class="cat">🐈‍⬛</div>
 
     <div class="chat-header">🌙 ABYSS MESSENGER</div>
 
@@ -220,7 +234,7 @@ const emojiPanel=document.getElementById("emojiPanel");
 const typingIndicator=document.getElementById("typingIndicator");
 const dontPressBtn=document.getElementById("dontPressBtn");
 
-/* SEND */
+/* send */
 function sendMessage(){
     const message=input.value.trim();
     const username=usernameInput.value.trim();
@@ -234,7 +248,7 @@ input.addEventListener("keypress",e=>{
     if(e.key==="Enter")sendMessage();
 });
 
-/* RECEIVE */
+/* receive */
 socket.on("receive_message",data=>{
     const div=document.createElement("div");
     div.classList.add("message");
@@ -246,7 +260,7 @@ socket.on("receive_message",data=>{
     messages.scrollTop=messages.scrollHeight;
 });
 
-/* TYPING */
+/* typing */
 input.addEventListener("input",()=>{
     const username=usernameInput.value.trim();
     if(username)socket.emit("typing",username);
@@ -257,7 +271,7 @@ socket.on("user_typing",username=>{
     setTimeout(()=>typingIndicator.textContent="",1500);
 });
 
-/* EMOJI */
+/* emoji */
 emojiBtn.onclick=()=>{
     emojiPanel.style.display=
         emojiPanel.style.display==="flex"?"none":"flex";
@@ -270,18 +284,18 @@ emojiPanel.querySelectorAll("span").forEach(emoji=>{
     };
 });
 
-/* DONT PRESS */
+/* don't press */
 dontPressBtn.onclick=()=>{
     const funny=[
-        "😑 I literally said don't press nigga.",
+        "😑 I literally said don't.",
         "🙄 Why can't you follow instructions?",
-        "👁 Jeffrey Epstein is watching you.",
-        "🐱 The cat judges you.",
-        "💀 Rip my granny she got hit by a bazooka."
+        "👁 The abyss noticed that.",
+        "🐈‍⬛ The black cat judges you.",
+        "💀 You unlocked absolutely nothing."
     ];
     const random=funny[Math.floor(Math.random()*funny.length)];
     const div=document.createElement("div");
-    div.classList.add("message");
+    div.classList.add("message","shadow-message");
     div.innerHTML=`<div class="username">Abyss</div><div>${random}</div>`;
     messages.appendChild(div);
     messages.scrollTop=messages.scrollHeight;
