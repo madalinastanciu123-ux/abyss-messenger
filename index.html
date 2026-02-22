@@ -125,14 +125,24 @@ body::before{
     aling-items:center;
 }
 
-input{
+#usernameInput{
+    width:90px;
+}
+
+#messageInput{
     flex:1;
+    min-width:0; /* IMPORTANT */
+
     padding:10px;
     border-radius:12px;
     border:none;
     background:rgba(255,255,255,0.08);
     color:white;
     outline:none;
+    #emojiBtn,
+#sendBtn{
+    flex-shrink:0;
+}
 }
 
 button{
@@ -311,6 +321,7 @@ dontPressBtn.onclick=()=>{
 
 </body>
 </html>
+
 
 
 
