@@ -3,23 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>🌙 Abyss Messenger</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
-
 body {
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0b0815;
-    font-family: 'Inter', sans-serif;
-    color: white;
-    
+    background: linear-gradient(135deg,#0f0b1a,#1b1230);
+    font-family: 'Poppins', sans-serif;
 }
 
 /* ⭐ STARS */
@@ -34,47 +29,55 @@ body::before {
         radial-gradient(2px 2px at 60% 10%, white, transparent),
         radial-gradient(2px 2px at 80% 60%, white, transparent),
         radial-gradient(2px 2px at 90% 30%, white, transparent),
-        radial-gradient(2px 2px at 50% 85%, white, transparent),
-        radial-gradient(2px 2px at 15% 55%, white, transparent);
+        radial-gradient(2px 2px at 50% 80%, white, transparent),
+        radial-gradient(2px 2px at 15% 50%, white, transparent),
+        radial-gradient(2px 2px at 70% 75%, white, transparent),
+        radial-gradient(2px 2px at 35% 15%, white, transparent);
     opacity: 0.8;
     pointer-events: none;
 }
 
+/* CHAT CARD */
 .chat-card {
-    width: 100%;
-    max-width: 680px;
-    height: 90vh;
-    max-height: 680px;
-    background: rgba(24,18,44,0.97);
-    border-radius: 24px;
+    width: 420px;
+    height: 640px;
+    background: rgba(30,24,48,0.9);
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 80px rgba(147,51,234,0.5);
-    overflow: hidden;
+    box-shadow: 0 0 70px rgba(124,58,237,0.4);
+    position: relative;
 }
+
+/* 🐈 CAT */
 .cat {
     position: absolute;
-    top: -18px;
-    right: 15px;
-    font-size: 38px;
-    transform: rotate(-10deg);
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
-    cursor: pointer;
+    top: -10px;
+    right: -5px;
+    font-size: 42px;
+    transform: rotate(-8deg);
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
+    z-index: 5;
     transition: transform 0.2s ease;
 }
 
 .cat:hover {
     transform: rotate(5deg) scale(1.1);
 }
+
+/* HEADER */
 .chat-header {
-    padding: 20px;
+    background: linear-gradient(90deg,#5b21b6,#9333ea);
+    padding: 18px;
     text-align: center;
     font-family: 'Cinzel', serif;
-    letter-spacing: 3px;
-    font-size: 18px;
-    background: linear-gradient(90deg,#6d28d9,#9333ea);
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: white;
+    border-radius: 20px 20px 0 0;
 }
 
+/* MESSAGES */
 .messages {
     flex: 1;
     padding: 20px;
@@ -83,101 +86,79 @@ body::before {
     flex-direction: column;
     gap: 14px;
     scroll-behavior: smooth;
--webkit-overflow-scrolling: touch;
-    overflow-y: auto;
--webkit-overflow-scrolling: touch;
-}
-
-.message-wrapper {
-    max-width: 75%;
-}
-
-.mine {
-    align-self: flex-end;
-    text-align: right;
-}
-
-.username {
-    font-family: 'Cinzel', serif;
-    font-size: 12px;
-    color: #c084fc;
-    margin-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .message {
-    padding: 12px 16px;
-    border-radius: 18px;
-    background: rgba(124,58,237,0.25);
-    word-wrap: break-word;
+    background: rgba(124,58,237,0.15);
+    padding: 10px 14px;
+    border-radius: 14px;
+    color: white;
+    font-size: 14px;
 }
 
-.mine .message {
-    background: #7c3aed;
+.username {
+    font-weight: 500;
+    color: #c084fc;
+    font-size: 13px;
+    margin-bottom: 4px;
 }
 
-/* INPUT */
-.chat-input {
-    padding: 15px;
-    background: #1a142d;
+/* INPUT AREA */
+.input-area {
     display: flex;
-    gap: 8px;
-    align-items: center;
-    position: relative;
+    gap: 10px;
+    padding: 15px;
 }
 
-.chat-input input {
+input {
+    flex: 1;
     padding: 10px;
     border-radius: 12px;
     border: none;
-    background: #352a54;
+    background: rgba(255,255,255,0.08);
     color: white;
-    font-size: 14px;
     outline: none;
 }
 
-#usernameInput {
-    width: 90px;
-}
-
-#messageInput {
-    flex: 1;
-}
-
 button {
+    background: linear-gradient(90deg,#7c3aed,#a855f7);
+    border: none;
     padding: 10px 14px;
     border-radius: 12px;
-    border: none;
+    color: white;
     cursor: pointer;
     font-weight: 500;
 }
 
-#sendBtn {
-    background: linear-gradient(90deg,#7c3aed,#a855f7);
-    color: white;
+button:hover {
+    opacity: 0.9;
 }
 
-#emojiBtn {
-    background: #352a54;
-    font-size: 18px;
+/* TYPING */
+.typing {
+    font-size: 12px;
+    color: #a78bfa;
+    padding-left: 20px;
+    padding-bottom: 10px;
 }
 
 /* EMOJI PANEL */
 .emoji-panel {
     position: absolute;
-    bottom: 70px;
-    right: 10px;
-    background: #1e1835;
+    bottom: 80px;
+    right: 20px;
+    background: rgba(40,30,60,0.95);
     padding: 10px;
     border-radius: 12px;
     display: none;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     width: 200px;
 }
 
 .emoji-panel span {
     cursor: pointer;
-    font-size: 18px;
 }
 </style>
 </head>
@@ -186,26 +167,28 @@ button {
 
 <div class="chat-card">
     <div class="cat">🐈‍⬛</div>
+
     <div class="chat-header">🌙 ABYSS MESSENGER</div>
 
-    <div id="messages" class="messages"></div>
-<div id="typingIndicator" style="padding: 0 20px; font-size: 12px; color: #c084fc;"></div>
-    <div class="chat-input">
-        <input id="usernameInput" placeholder="Name">
-        <input id="messageInput" placeholder="Scrie mesaj...">
+    <div class="messages" id="messages"></div>
+
+    <div class="typing" id="typingIndicator"></div>
+
+    <div class="input-area">
+        <input type="text" id="usernameInput" placeholder="Name">
+        <input type="text" id="messageInput" placeholder="Scrie mesaj...">
         <button id="emojiBtn">😊</button>
         <button id="sendBtn">Trimite</button>
+    </div>
 
-        <div id="emojiPanel" class="emoji-panel">
-            <span>😀</span><span>😂</span><span>😍</span><span>🥺</span>
-            <span>😎</span><span>🔥</span><span>💜</span><span>🌙</span>
-            <span>✨</span><span>😭</span><span>😈</span><span>💀</span>
-        </div>
+    <div class="emoji-panel" id="emojiPanel">
+        <span>😊</span><span>😂</span><span>😍</span>
+        <span>😈</span><span>🖤</span><span>🔥</span>
+        <span>✨</span><span>🥺</span><span>😎</span>
     </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-
 <script>
 const socket = io();
 const messages = document.getElementById("messages");
@@ -215,31 +198,15 @@ const sendBtn = document.getElementById("sendBtn");
 const emojiBtn = document.getElementById("emojiBtn");
 const emojiPanel = document.getElementById("emojiPanel");
 const typingIndicator = document.getElementById("typingIndicator");
-/* TOGGLE EMOJI */
-emojiBtn.onclick = () => {
-    emojiPanel.style.display =
-        emojiPanel.style.display === "flex" ? "none" : "flex";
-};
-
-/* ADD EMOJI */
-emojiPanel.querySelectorAll("span").forEach(e => {
-    e.onclick = () => {
-        input.value += e.textContent;
-        input.focus();
-    };
-});
 
 /* SEND */
 function sendMessage() {
     const message = input.value.trim();
     const username = usernameInput.value.trim();
+
     if (!message || !username) return;
 
-    socket.emit("send_message", {
-        user: username,
-        text: message
-    });
-
+    socket.emit("send_message", { username, message });
     input.value = "";
 }
 
@@ -248,52 +215,44 @@ sendBtn.onclick = sendMessage;
 input.addEventListener("keypress", e => {
     if (e.key === "Enter") sendMessage();
 });
-/* TYPING */
-input.addEventListener("input", () => {
-  const username = usernameInput.value.trim();
-  if (username) {
-    socket.emit("typing", username);
-  }
-});
 
-socket.on("user_typing", (username) => {
-  typingIndicator.textContent = username + " scrie...";
-  setTimeout(() => {
-    typingIndicator.textContent = "";
-  }, 1500);
-});
 /* RECEIVE */
 socket.on("receive_message", data => {
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("message-wrapper");
+    const div = document.createElement("div");
+    div.classList.add("message");
 
-    if (data.user === usernameInput.value.trim()) {
-        wrapper.classList.add("mine");
-    }
+    div.innerHTML = `
+        <div class="username">${data.username}</div>
+        <div>${data.message}</div>
+    `;
 
-    const name = document.createElement("div");
-    name.classList.add("username");
-    name.textContent = data.user;
-
-    const bubble = document.createElement("div");
-    bubble.classList.add("message");
-    bubble.textContent = data.text;
-
-    wrapper.appendChild(name);
-    wrapper.appendChild(bubble);
-    messages.appendChild(wrapper);
+    messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
+});
+
+/* TYPING */
+input.addEventListener("input", () => {
+    const username = usernameInput.value.trim();
+    if (username) socket.emit("typing", username);
+});
+
+socket.on("user_typing", username => {
+    typingIndicator.textContent = username + " scrie...";
+    setTimeout(() => typingIndicator.textContent = "", 1500);
+});
+
+/* EMOJI */
+emojiBtn.onclick = () => {
+    emojiPanel.style.display = emojiPanel.style.display === "flex" ? "none" : "flex";
+};
+
+emojiPanel.querySelectorAll("span").forEach(emoji => {
+    emoji.onclick = () => {
+        input.value += emoji.textContent;
+        emojiPanel.style.display = "none";
+    };
 });
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
