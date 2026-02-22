@@ -98,7 +98,25 @@ body::before{
     color:white;
     font-size:14px;
 }
+.dont-press {
+    position: absolute;
+    bottom: -45px;
+    right: 20px;
+    background: #1b102c;
+    color: #ff4d6d;
+    border: 1px solid #ff4d6d;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.3s;
+}
 
+.dont-press:hover {
+    background: #ff4d6d;
+    color: white;
+    transform: scale(1.05);
+}
 .username{
     font-weight:500;
     color:#c084fc;
@@ -190,6 +208,7 @@ button:hover{
         <input type="text" id="messageInput" placeholder="Scrie mesaj...">
         <button id="emojiBtn">😊</button>
         <button id="sendBtn">Trimite</button>
+        <button id="dontPressBtn" class="dont-press">Don't Press</button>
     </div>
 
     <div class="emoji-panel" id="emojiPanel">
@@ -265,4 +284,5 @@ emojiPanel.querySelectorAll("span").forEach(emoji=>{
 
 </body>
 </html>
+
 
