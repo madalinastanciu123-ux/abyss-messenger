@@ -122,7 +122,7 @@ body::before{
     gap:8px;
     padding:15px;
     z-index:1;
-    aling-items:center;
+    align-items:center;
 }
 
 #usernameInput{
@@ -131,18 +131,28 @@ body::before{
 
 #messageInput{
     flex:1;
-    min-width:0; /* IMPORTANT */
+    min-width:0;
+}
 
+#usernameInput,
+#messageInput{
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border:none;
     padding:10px;
     border-radius:12px;
-    border:none;
-    background:rgba(255,255,255,0.08);
-    color:white;
     outline:none;
-    #emojiBtn,
-#sendBtn{
-    flex-shrink:0;
 }
+
+#usernameInput::placeholder,
+#messageInput::placeholder{
+    color: rgba(255,255,255,0.4);
+}
+
+/* Chrome autofill fix */
+input:-webkit-autofill{
+    -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.08) inset !important;
+    -webkit-text-fill-color: white !important;
 }
 
 button{
@@ -152,6 +162,7 @@ button{
     color:white;
     cursor:pointer;
     font-weight:500;
+    flex-shrink:0;
 }
 
 #sendBtn{
@@ -162,12 +173,11 @@ button{
     background:#352a54;
 }
 
-/* Don't Press in background */
+/* Don't Press */
 #dontPressBtn{
-    position:fixed;   /* IMPORTANT */
+    position:fixed;
     bottom:40px;
-    right:20px;
-    left:calc(50%+260px);
+    left:calc(50% + 260px);
     opacity:0.25;
     background:none;
     border:1px dashed #ff4d6d;
@@ -176,7 +186,7 @@ button{
     padding:4px 10px;
     border-radius:20px;
     transition:0.3s;
-    z-index:9999;     /* peste tot */
+    z-index:9999;
 }
 
 #dontPressBtn:hover{
@@ -210,11 +220,9 @@ button{
 <div class="chat-card">
 
     <div class="cat">🐈‍⬛</div>
-
     <div class="chat-header">🌙 ABYSS MESSENGER</div>
 
     <div class="messages" id="messages"></div>
-
     <div class="typing" id="typingIndicator"></div>
 
     <div class="input-area">
@@ -224,14 +232,14 @@ button{
         <button id="sendBtn">Trimite</button>
     </div>
 
-    <button id="dontPressBtn">Don't Press</button>
+</div>
 
-    <div class="emoji-panel" id="emojiPanel">
-        <span>😊</span><span>😂</span><span>😍</span>
-        <span>😈</span><span>🖤</span><span>🔥</span>
-        <span>✨</span><span>🥺</span><span>😎</span>
-    </div>
+<button id="dontPressBtn">Don't Press</button>
 
+<div class="emoji-panel" id="emojiPanel">
+    <span>😊</span><span>😂</span><span>😍</span>
+    <span>😈</span><span>🖤</span><span>🔥</span>
+    <span>✨</span><span>🥺</span><span>😎</span>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -246,7 +254,6 @@ const emojiPanel=document.getElementById("emojiPanel");
 const typingIndicator=document.getElementById("typingIndicator");
 const dontPressBtn=document.getElementById("dontPressBtn");
 
-/* send */
 function sendMessage(){
     const message=input.value.trim();
     const username=usernameInput.value.trim();
@@ -256,11 +263,22 @@ function sendMessage(){
 }
 
 sendBtn.onclick=sendMessage;
-input.addEventListener("keypress",e=>{
-    if(e.key==="Enter")sendMessage();
+
+/* ENTER FIX (emoji works) */
+input.addEventListener("keydown", e=>{
+    if(e.key==="Enter"){
+        e.preventDefault();
+        sendMessage();
+    }
 });
 
-/* receive */
+usernameInput.addEventListener("keydown", e=>{
+    if(e.key==="Enter"){
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
 socket.on("receive_message",data=>{
     const div=document.createElement("div");
     div.classList.add("message");
@@ -272,7 +290,6 @@ socket.on("receive_message",data=>{
     messages.scrollTop=messages.scrollHeight;
 });
 
-/* typing */
 input.addEventListener("input",()=>{
     const username=usernameInput.value.trim();
     if(username)socket.emit("typing",username);
@@ -283,7 +300,6 @@ socket.on("user_typing",username=>{
     setTimeout(()=>typingIndicator.textContent="",1500);
 });
 
-/* emoji */
 emojiBtn.onclick=()=>{
     emojiPanel.style.display=
         emojiPanel.style.display==="flex"?"none":"flex";
@@ -296,7 +312,6 @@ emojiPanel.querySelectorAll("span").forEach(emoji=>{
     };
 });
 
-/* don't press */
 dontPressBtn.onclick=()=>{
     const funny=[
         "😑 I literally said don't.",
@@ -304,11 +319,12 @@ dontPressBtn.onclick=()=>{
         "👁 The abyss noticed that.",
         "🐈‍⬛ The black cat judges you.",
         "💀 You unlocked absolutely nothing.",
-        "💀 You suck bitch.",
-        " Beeeee pisatuleeee.",
-        " nigga nigga nigaa .",
-        " Rip my granny she got hit by a bazooka."
-
+      " esti prost???.",
+      " Beeee pisatuleee.",
+      "nigga nigga nigga.",
+      "ba coaie.",
+    "la ce te uiti.",
+      "pula pula pula."
     ];
     const random=funny[Math.floor(Math.random()*funny.length)];
     const div=document.createElement("div");
@@ -321,8 +337,3 @@ dontPressBtn.onclick=()=>{
 
 </body>
 </html>
-
-
-
-
-
