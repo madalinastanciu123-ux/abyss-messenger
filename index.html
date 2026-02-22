@@ -256,7 +256,36 @@ socket.on("receive_message",data=>{
     messages.appendChild(div);
     messages.scrollTop=messages.scrollHeight;
 });
+socket.on("receive_message", (data) => {
 
+});
+
+
+
+
+const dontPressBtn = document.getElementById("dontPressBtn");
+
+dontPressBtn.addEventListener("click", () => {
+
+    const funnyMessages = [
+        "😑 I told you not to press it nigga",
+        "🙄 Why are you like this?",
+        "👁 Jeffrey Epstein is watching...",
+        "🐈 The black cat is disappointed.",
+        "💀Rip my Granny she got hit by a bazooka."
+    ];
+
+    const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.innerHTML = `<strong>Abyss:</strong> ${randomMessage}`;
+
+    document.getElementById("messages").appendChild(messageDiv);
+    document.getElementById("messages").scrollTop =
+        document.getElementById("messages").scrollHeight;
+
+});
 /* TYPING */
 input.addEventListener("input",()=>{
     const username=usernameInput.value.trim();
@@ -284,5 +313,6 @@ emojiPanel.querySelectorAll("span").forEach(emoji=>{
 
 </body>
 </html>
+
 
 
