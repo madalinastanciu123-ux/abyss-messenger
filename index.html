@@ -328,21 +328,36 @@ dontPressBtn.onclick=()=>{
         rgb(${15+intensity*150},0,${26+intensity*150}),
         rgb(${27+intensity*80},0,${48+intensity*80}))`;
 
-    if(corruptionLevel===100){
+ if(corruptionLevel===100){
 
-        playHorrorSound();
+    playHorrorSound();
 
-        document.querySelector(".chat-card").classList.add("glitch-mode");
+    const chatCard = document.querySelector(".chat-card");
+    chatCard.classList.add("glitch-mode");
 
-        let flashes=0;
-        const interval=setInterval(()=>{
-            flicker.style.opacity=flicker.style.opacity==="1"?"0":"1";
-            flashes++;
-            if(flashes>10){
-                clearInterval(interval);
-                flicker.style.opacity="0";
-            }
-        },80);
+    let flashes=0;
+    const interval=setInterval(()=>{
+        flicker.style.opacity = flicker.style.opacity==="1" ? "0" : "1";
+        flashes++;
+        if(flashes>10){
+            clearInterval(interval);
+            flicker.style.opacity="0";
+        }
+    },80);
+
+    // OPRIM glitch după 2 secunde
+    setTimeout(()=>{
+        chatCard.classList.remove("glitch-mode");
+    },2000);
+
+    // mesaj creepy
+    setTimeout(()=>{
+        const finalMsg=document.createElement("div");
+        finalMsg.classList.add("message","shadow-message");
+        finalMsg.innerHTML=`<div class="username">Abyss</div><div>You shouldn't be here anymore.</div>`;
+        messages.appendChild(finalMsg);
+        messages.scrollTop=messages.scrollHeight;
+    },1200);
 
         setTimeout(()=>{
             const finalMsg=document.createElement("div");
@@ -359,3 +374,4 @@ dontPressBtn.onclick=()=>{
 
 </body>
 </html>
+
