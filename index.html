@@ -255,9 +255,11 @@ const typingIndicator=document.getElementById("typingIndicator");
 const dontPressBtn=document.getElementById("dontPressBtn");
 
 function sendMessage(){
-    const message=input.value.trim();
-    const username=usernameInput.value.trim();
-    if(!message||!username)return;
+    const message = input.value;
+    const username = usernameInput.value.trim();
+
+    if(message.length === 0 || username.length === 0) return;
+
     socket.emit("send_message",{username,message});
     input.value="";
 }
@@ -337,3 +339,4 @@ dontPressBtn.onclick=()=>{
 
 </body>
 </html>
+
