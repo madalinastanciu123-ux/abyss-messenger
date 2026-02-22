@@ -196,9 +196,9 @@ button{
 
 /* emoji panel */
 .emoji-panel{
-    position:absolute;
-    bottom:85px;
-    right:20px;
+    position:fixed;
+    bottom:120px;
+    left:calc(50% + 120px);
     background:rgba(40,30,60,0.95);
     padding:10px;
     border-radius:12px;
@@ -206,7 +206,7 @@ button{
     flex-wrap:wrap;
     gap:8px;
     width:200px;
-    z-index:5;
+    z-index:10000;
 }
 
 .emoji-panel span{
@@ -339,4 +339,5 @@ dontPressBtn.onclick=()=>{
 
 </body>
 </html>
+
 
