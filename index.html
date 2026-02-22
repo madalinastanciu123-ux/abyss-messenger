@@ -5,9 +5,13 @@
 <title>🖤 Abyss Messenger</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
     min-height:100vh;
@@ -41,7 +45,7 @@ body::before{
 /* CHAT CARD */
 .chat-card{
     width:480px;
-    height:90vh;
+    height:88vh;
     max-height:700px;
     background:rgba(30,24,48,0.95);
     border-radius:25px;
@@ -50,21 +54,17 @@ body::before{
     box-shadow:0 0 80px rgba(124,58,237,0.4);
     position:relative;
     overflow:hidden;
+    z-index:2;
 }
 
-/* 🐈 CAT HEAD (ascuns după card) */
-.cat-head{
+/* 🐱 CUTE CAT HEAD (behind card) */
+.cat{
     position:absolute;
-    top:-18px;
-    right:20px;
-    font-size:40px;
-    z-index:5;
-    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.6));
-    transition:0.3s;
-}
-
-.cat-head:hover{
-    transform:translateY(4px);
+    top:-22px;
+    right:35px;
+    font-size:42px;
+    z-index:1;
+    pointer-events:none;
 }
 
 /* HEADER */
@@ -105,7 +105,14 @@ body::before{
     margin-bottom:4px;
 }
 
-/* INPUT */
+/* TYPING */
+.typing{
+    font-size:12px;
+    color:#a78bfa;
+    padding:0 20px 6px 20px;
+}
+
+/* INPUT AREA */
 .input-area{
     display:flex;
     gap:10px;
@@ -120,6 +127,7 @@ input{
     background:rgba(255,255,255,0.08);
     color:white;
     outline:none;
+    min-width:0;
 }
 
 button{
@@ -130,18 +138,11 @@ button{
     color:white;
     cursor:pointer;
     font-weight:500;
+    white-space:nowrap;
 }
 
 button:hover{
     opacity:0.9;
-}
-
-/* TYPING */
-.typing{
-    font-size:12px;
-    color:#a78bfa;
-    padding-left:20px;
-    padding-bottom:8px;
 }
 
 /* EMOJI PANEL */
@@ -168,7 +169,7 @@ button:hover{
 
 <div class="chat-card">
 
-    <div class="cat-head">🐈‍⬛</div>
+    <div class="cat">🐱</div>
 
     <div class="chat-header">🌙 ABYSS MESSENGER</div>
 
@@ -193,14 +194,14 @@ button:hover{
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-const socket = io();
-const messages = document.getElementById("messages");
-const input = document.getElementById("messageInput");
-const usernameInput = document.getElementById("usernameInput");
-const sendBtn = document.getElementById("sendBtn");
-const emojiBtn = document.getElementById("emojiBtn");
-const emojiPanel = document.getElementById("emojiPanel");
-const typingIndicator = document.getElementById("typingIndicator");
+const socket=io();
+const messages=document.getElementById("messages");
+const input=document.getElementById("messageInput");
+const usernameInput=document.getElementById("usernameInput");
+const sendBtn=document.getElementById("sendBtn");
+const emojiBtn=document.getElementById("emojiBtn");
+const emojiPanel=document.getElementById("emojiPanel");
+const typingIndicator=document.getElementById("typingIndicator");
 
 /* SEND */
 function sendMessage(){
