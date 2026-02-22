@@ -19,9 +19,10 @@ body{
     background:linear-gradient(135deg,#0f0b1a,#1b1230);
     font-family:'Poppins',sans-serif;
     transition:0.6s;
+    overflow:hidden;
 }
 
-/* ⭐ static stars */
+/* stars */
 body::before{
     content:"";
     position:fixed;
@@ -30,13 +31,32 @@ body::before{
         radial-gradient(2px 2px at 10% 20%, white, transparent),
         radial-gradient(2px 2px at 25% 70%, white, transparent),
         radial-gradient(2px 2px at 40% 40%, white, transparent),
-        radial-gradient(2px 2px at 60% 10%, white, transparent),
-        radial-gradient(2px 2px at 80% 60%, white, transparent),
-        radial-gradient(2px 2px at 90% 30%, white, transparent),
-        radial-gradient(2px 2px at 70% 80%, white, transparent),
-        radial-gradient(2px 2px at 15% 90%, white, transparent);
-    opacity:0.8;
+        radial-gradient(2px 2px at 60% 10%, white, transparent);
+    opacity:0.6;
     pointer-events:none;
+}
+
+/* glitch */
+@keyframes glitch{
+  0%{transform:translate(2px,-2px);}
+  25%{transform:translate(-2px,2px);}
+  50%{transform:translate(2px,2px);}
+  75%{transform:translate(-2px,-2px);}
+  100%{transform:translate(0,0);}
+}
+
+.glitch-mode{
+  animation:glitch 0.08s infinite;
+}
+
+/* flicker */
+.screen-flicker{
+  position:fixed;
+  inset:0;
+  background:black;
+  opacity:0;
+  pointer-events:none;
+  z-index:20000;
 }
 
 /* chat */
@@ -49,7 +69,6 @@ body::before{
     display:flex;
     flex-direction:column;
     box-shadow:0 0 80px rgba(124,58,237,0.4);
-    position:relative;
     overflow:hidden;
 }
 
@@ -89,29 +108,21 @@ body::before{
     margin-bottom:4px;
 }
 
-/* shadow messages */
 .shadow-message{
-    background:rgba(0,0,0,0.45);
-    border:1px solid rgba(255,77,109,0.4);
-    color:#ff9ab0;
+    background:rgba(0,0,0,0.65);
+    border:1px solid rgba(255,0,0,0.7);
+    color:#ff4d6d;
     font-style:italic;
 }
 
 /* typing + corruption */
-.typing,
-#corruptionIndicator{
+.typing,#corruptionIndicator{
     font-size:12px;
     padding:0 20px 6px 20px;
 }
 
-.typing{
-    color:#a78bfa;
-}
-
-#corruptionIndicator{
-    color:#ff4d6d;
-    opacity:0.7;
-}
+.typing{color:#a78bfa;}
+#corruptionIndicator{color:#ff4d6d;opacity:0.8;}
 
 /* input */
 .input-area{
@@ -121,19 +132,16 @@ body::before{
     align-items:center;
 }
 
-#usernameInput{
-    width:90px;
-}
+#usernameInput{width:90px;}
 
 #messageInput{
     flex:1;
     min-width:0;
 }
 
-#usernameInput,
-#messageInput{
-    background: rgba(255,255,255,0.08);
-    color: white;
+#usernameInput,#messageInput{
+    background:rgba(255,255,255,0.08);
+    color:white;
     border:none;
     padding:10px;
     border-radius:12px;
@@ -154,9 +162,7 @@ button{
     background:linear-gradient(90deg,#7c3aed,#a855f7);
 }
 
-#emojiBtn{
-    background:#352a54;
-}
+#emojiBtn{background:#352a54;}
 
 /* Don't Press */
 #dontPressBtn{
@@ -179,7 +185,7 @@ button{
     transform:scale(1.05);
 }
 
-/* emoji panel */
+/* emoji */
 .emoji-panel{
     position:fixed;
     bottom:120px;
@@ -194,13 +200,13 @@ button{
     z-index:10000;
 }
 
-.emoji-panel span{
-    cursor:pointer;
-}
+.emoji-panel span{cursor:pointer;}
 </style>
 </head>
 
 <body>
+
+<div id="flicker" class="screen-flicker"></div>
 
 <div class="chat-card">
     <div class="chat-header">🌙 ABYSS MESSENGER</div>
@@ -233,10 +239,48 @@ const usernameInput=document.getElementById("usernameInput");
 const sendBtn=document.getElementById("sendBtn");
 const emojiBtn=document.getElementById("emojiBtn");
 const emojiPanel=document.getElementById("emojiPanel");
-const typingIndicator=document.getElementById("typingIndicator");
 const dontPressBtn=document.getElementById("dontPressBtn");
+const flicker=document.getElementById("flicker");
 
-let corruptionLevel = 0;
+let corruptionLevel=0;
+
+/* 🔊 HORROR SOUND GENERATOR */
+function playHorrorSound(){
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    const distortion = audioCtx.createWaveShaper();
+
+    function makeDistortionCurve(amount){
+        const n_samples=44100;
+        const curve=new Float32Array(n_samples);
+        const deg=Math.PI/180;
+        for(let i=0;i<n_samples;i++){
+            const x=i*2/n_samples-1;
+            curve[i]=(3+amount)*x*20*deg/(Math.PI+amount*Math.abs(x));
+        }
+        return curve;
+    }
+
+    distortion.curve=makeDistortionCurve(400);
+    distortion.oversample='4x';
+
+    oscillator.type="sawtooth";
+    oscillator.frequency.setValueAtTime(70,audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(20,audioCtx.currentTime+2);
+
+    gainNode.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.7,audioCtx.currentTime+0.4);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+3);
+
+    oscillator.connect(distortion);
+    distortion.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime+3);
+}
 
 /* send */
 function sendMessage(){
@@ -249,27 +293,11 @@ function sendMessage(){
 
 sendBtn.onclick=sendMessage;
 
-input.addEventListener("keydown", e=>{
+input.addEventListener("keydown",e=>{
     if(e.key==="Enter"){
         e.preventDefault();
         sendMessage();
     }
-});
-
-usernameInput.addEventListener("keydown", e=>{
-    if(e.key==="Enter"){
-        e.preventDefault();
-        sendMessage();
-    }
-});
-
-/* receive */
-socket.on("receive_message",data=>{
-    const div=document.createElement("div");
-    div.classList.add("message");
-    div.innerHTML=`<div class="username">${data.username}</div><div>${data.message}</div>`;
-    messages.appendChild(div);
-    messages.scrollTop=messages.scrollHeight;
 });
 
 /* emoji */
@@ -285,7 +313,7 @@ emojiPanel.querySelectorAll("span").forEach(emoji=>{
     };
 });
 
-/* corruption system */
+/* CORRUPTION + SCARY MODE */
 dontPressBtn.onclick=()=>{
     corruptionLevel+=10;
     if(corruptionLevel>100)corruptionLevel=100;
@@ -297,30 +325,34 @@ dontPressBtn.onclick=()=>{
 
     document.body.style.background=
         `linear-gradient(135deg,
-        rgb(${15+intensity*120},0,${26+intensity*120}),
-        rgb(${27+intensity*60},0,${48+intensity*60}))`;
-
-    const messagesList=[
-        "The corruption grows...",
-        "You were warned.",
-        "The abyss is closer now.",
-        "Why do you continue?",
-        "It is too late."
-    ];
-
-    const random=messagesList[Math.floor(Math.random()*messagesList.length)];
-
-    const div=document.createElement("div");
-    div.classList.add("message","shadow-message");
-    div.innerHTML=`<div class="username">Abyss</div><div>${random}</div>`;
-    messages.appendChild(div);
-    messages.scrollTop=messages.scrollHeight;
+        rgb(${15+intensity*150},0,${26+intensity*150}),
+        rgb(${27+intensity*80},0,${48+intensity*80}))`;
 
     if(corruptionLevel===100){
-        const finalMsg=document.createElement("div");
-        finalMsg.classList.add("message","shadow-message");
-        finalMsg.innerHTML=`<div class="username">Abyss</div><div>It has begun.</div>`;
-        messages.appendChild(finalMsg);
+
+        playHorrorSound();
+
+        document.querySelector(".chat-card").classList.add("glitch-mode");
+
+        let flashes=0;
+        const interval=setInterval(()=>{
+            flicker.style.opacity=flicker.style.opacity==="1"?"0":"1";
+            flashes++;
+            if(flashes>10){
+                clearInterval(interval);
+                flicker.style.opacity="0";
+            }
+        },80);
+
+        setTimeout(()=>{
+            const finalMsg=document.createElement("div");
+            finalMsg.classList.add("message","shadow-message");
+            finalMsg.innerHTML=`<div class="username">Abyss</div><div>You shouldn't be here anymore.</div>`;
+            messages.appendChild(finalMsg);
+            messages.scrollTop=messages.scrollHeight;
+        },1200);
+
+        dontPressBtn.style.display="none";
     }
 };
 </script>
