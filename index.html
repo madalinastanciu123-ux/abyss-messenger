@@ -229,7 +229,20 @@ sendBtn.onclick = sendMessage;
 input.addEventListener("keypress", e => {
     if (e.key === "Enter") sendMessage();
 });
+/* TYPING */
+input.addEventListener("input", () => {
+  const username = usernameInput.value.trim();
+  if (username) {
+    socket.emit("typing", username);
+  }
+});
 
+socket.on("user_typing", (username) => {
+  typingIndicator.textContent = username + " scrie...";
+  setTimeout(() => {
+    typingIndicator.textContent = "";
+  }, 1500);
+});
 /* RECEIVE */
 socket.on("receive_message", data => {
     const wrapper = document.createElement("div");
@@ -256,5 +269,6 @@ socket.on("receive_message", data => {
 
 </body>
 </html>
+
 
 
