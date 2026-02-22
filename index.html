@@ -4,75 +4,70 @@
 <meta charset="UTF-8">
 <title>🌙 Abyss Messenger</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="favicon.png?v=6">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="favicon.png?v=50">
 
 <style>
+* { box-sizing: border-box; }
+
 body {
     margin: 0;
     height: 100vh;
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle at top, #1b1230, #0f0b1a 70%);
+    background-color: #0c0815;
     font-family: 'Inter', sans-serif;
+    overflow: hidden;
     color: white;
 }
 
-/* ⭐ FULL STAR FIELD */
+/* ⭐ Full stars */
 body::before {
     content: "";
     position: fixed;
-    width: 200%;
-    height: 200%;
-    background: transparent;
+    width: 100%;
+    height: 100%;
     background-image:
-        radial-gradient(2px 2px at 20% 30%, white, transparent),
-        radial-gradient(1px 1px at 70% 60%, white, transparent),
-        radial-gradient(2px 2px at 40% 80%, white, transparent),
-        radial-gradient(1px 1px at 85% 20%, white, transparent),
-        radial-gradient(1px 1px at 10% 50%, white, transparent),
-        radial-gradient(2px 2px at 55% 15%, white, transparent),
-        radial-gradient(1px 1px at 90% 75%, white, transparent),
-        radial-gradient(2px 2px at 35% 40%, white, transparent),
-        radial-gradient(1px 1px at 60% 90%, white, transparent),
-        radial-gradient(2px 2px at 15% 85%, white, transparent);
-    animation: starsMove 60s linear infinite;
-    opacity: 0.5;
+        radial-gradient(2px 2px at 10% 20%, white, transparent),
+        radial-gradient(2px 2px at 30% 80%, white, transparent),
+        radial-gradient(2px 2px at 50% 40%, white, transparent),
+        radial-gradient(2px 2px at 70% 10%, white, transparent),
+        radial-gradient(2px 2px at 90% 60%, white, transparent),
+        radial-gradient(2px 2px at 20% 70%, white, transparent),
+        radial-gradient(2px 2px at 80% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 90%, white, transparent);
+    opacity: 0.8;
     z-index: 0;
 }
 
-@keyframes starsMove {
-    from { transform: translateY(0); }
-    to { transform: translateY(-500px); }
-}
-
+/* Card */
 .chat-card {
     position: relative;
     z-index: 1;
-    width: 500px;
-    height: 650px;
-    backdrop-filter: blur(20px);
-    background: rgba(30,24,48,0.9);
-    border-radius: 20px;
+    width: 420px;
+    height: 600px;
+    background: rgba(26,20,45,0.97);
+    border-radius: 22px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 100px rgba(124,58,237,0.5);
+    box-shadow: 0 0 120px rgba(147,51,234,0.5);
 }
 
 .chat-header {
-    background: linear-gradient(90deg, #5b21b6, #9333ea);
     padding: 20px;
     text-align: center;
     font-family: 'Cinzel', serif;
-    font-size: 22px;
-    letter-spacing: 2px;
+    font-size: 20px;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg,#6d28d9,#9333ea);
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
 }
 
 .messages {
     flex: 1;
-    padding: 15px;
+    padding: 18px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -82,7 +77,7 @@ body::before {
 .message-wrapper {
     display: flex;
     flex-direction: column;
-    max-width: 70%;
+    max-width: 75%;
 }
 
 .mine {
@@ -92,16 +87,15 @@ body::before {
 
 .username {
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 12px;
     color: #c084fc;
     margin-bottom: 4px;
 }
 
 .message {
     background: rgba(124,58,237,0.25);
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 14px;
+    padding: 12px 16px;
+    border-radius: 16px;
     word-wrap: break-word;
 }
 
@@ -111,39 +105,37 @@ body::before {
 
 .chat-input {
     display: flex;
-    padding: 15px;
-    background: rgba(40,30,70,0.9);
     gap: 8px;
+    padding: 15px;
+    background: #1a142d;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
     align-items: center;
 }
 
 .chat-input input {
-    flex: 1;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: none;
-    background: #3b2f52;
+    background: #352a54;
     color: white;
 }
+
+#usernameInput { width: 100px; }
+#messageInput { flex: 1; }
 
 .chat-input button {
     padding: 10px 14px;
+    border-radius: 10px;
     border: none;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #7c3aed, #a855f7);
+    background: linear-gradient(90deg,#7c3aed,#a855f7);
     color: white;
-    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
-}
-
-.chat-input button:hover {
-    transform: scale(1.05);
 }
 
 .emoji-btn {
-    font-size: 20px;
-    background: none;
+    font-size: 18px;
+    width: 42px;
 }
 </style>
 </head>
@@ -151,42 +143,36 @@ body::before {
 <body>
 
 <div class="chat-card">
-    <div class="chat-header">🌙 Abyss Messenger</div>
+    <div class="chat-header">🌙 ABYSS MESSENGER</div>
     <div id="messages" class="messages"></div>
+
     <div class="chat-input">
-        <input id="usernameInput" placeholder="Username..." />
-        <input id="messageInput" placeholder="Scrie mesaj..." />
-        <button class="emoji-btn" onclick="toggleEmoji()">😄</button>
+        <input id="usernameInput" placeholder="Name">
+        <input id="messageInput" placeholder="Scrie mesaj...">
+        <button class="emoji-btn" id="emojiBtn">😊</button>
         <button onclick="sendMessage()">Trimite</button>
     </div>
 </div>
 
-<!-- EMOJI PICKER -->
-<script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/index.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/index.min.js"></script>
 
 <script>
 const socket = io();
 const input = document.getElementById("messageInput");
 const usernameInput = document.getElementById("usernameInput");
 const messages = document.getElementById("messages");
+const emojiBtn = document.getElementById("emojiBtn");
 
-const picker = new EmojiButton({
-    theme: "dark",
-    position: "top-start"
-});
+const picker = new EmojiButton({ theme: "dark" });
 
 picker.on("emoji", emoji => {
     input.value += emoji;
 });
 
-function toggleEmoji() {
-    picker.togglePicker(document.querySelector(".emoji-btn"));
-}
-
-const params = new URLSearchParams(window.location.search);
-const room = params.get("room") || "default";
-socket.emit("join_room", room);
+emojiBtn.addEventListener("click", () => {
+    picker.togglePicker(emojiBtn);
+});
 
 function sendMessage() {
     const message = input.value.trim();
@@ -194,7 +180,6 @@ function sendMessage() {
     if (!username || !message) return;
 
     socket.emit("send_message", {
-        room: room,
         user: username,
         text: message
     });
@@ -202,11 +187,11 @@ function sendMessage() {
     input.value = "";
 }
 
-input.addEventListener("keypress", (e) => {
+input.addEventListener("keypress", e => {
     if (e.key === "Enter") sendMessage();
 });
 
-socket.on("receive_message", (data) => {
+socket.on("receive_message", data => {
 
     const wrapper = document.createElement("div");
     wrapper.classList.add("message-wrapper");
@@ -225,7 +210,6 @@ socket.on("receive_message", (data) => {
 
     wrapper.appendChild(name);
     wrapper.appendChild(bubble);
-
     messages.appendChild(wrapper);
     messages.scrollTop = messages.scrollHeight;
 });
