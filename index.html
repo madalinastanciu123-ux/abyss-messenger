@@ -153,9 +153,9 @@ button{
 
 /* Don't Press in background */
 #dontPressBtn{
-    position:absolute;
+    position:fixed;   /* IMPORTANT */
     bottom:110px;
-    right:25px;
+    right:40px;
     opacity:0.25;
     background:none;
     border:1px dashed #ff4d6d;
@@ -164,7 +164,7 @@ button{
     padding:4px 10px;
     border-radius:20px;
     transition:0.3s;
-    z-index:0;
+    z-index:9999;     /* peste tot */
 }
 
 #dontPressBtn:hover{
@@ -304,3 +304,4 @@ dontPressBtn.onclick=()=>{
 
 </body>
 </html>
+
