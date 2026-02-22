@@ -8,9 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
     margin:0;
@@ -33,11 +31,7 @@ body::before{
         radial-gradient(2px 2px at 40% 40%, white, transparent),
         radial-gradient(2px 2px at 60% 10%, white, transparent),
         radial-gradient(2px 2px at 80% 60%, white, transparent),
-        radial-gradient(2px 2px at 90% 30%, white, transparent),
-        radial-gradient(2px 2px at 50% 80%, white, transparent),
-        radial-gradient(2px 2px at 15% 50%, white, transparent),
-        radial-gradient(2px 2px at 70% 75%, white, transparent),
-        radial-gradient(2px 2px at 35% 15%, white, transparent);
+        radial-gradient(2px 2px at 90% 30%, white, transparent);
     opacity:0.8;
     pointer-events:none;
 }
@@ -57,13 +51,12 @@ body::before{
     z-index:2;
 }
 
-/* 🐱 CUTE CAT HEAD (behind card) */
+/* 🐱 CAT */
 .cat{
     position:absolute;
-    top:-28px;
+    top:-22px;
     right:35px;
-    width:60px;
-    height:60px;
+    font-size:42px;
     z-index:1;
     pointer-events:none;
 }
@@ -87,8 +80,6 @@ body::before{
     display:flex;
     flex-direction:column;
     gap:14px;
-    scroll-behavior:smooth;
-    -webkit-overflow-scrolling:touch;
 }
 
 .message{
@@ -98,25 +89,7 @@ body::before{
     color:white;
     font-size:14px;
 }
-.dont-press {
-    position: absolute;
-    bottom: -45px;
-    right: 20px;
-    background: #1b102c;
-    color: #ff4d6d;
-    border: 1px solid #ff4d6d;
-    padding: 6px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: 0.3s;
-}
 
-.dont-press:hover {
-    background: #ff4d6d;
-    color: white;
-    transform: scale(1.05);
-}
 .username{
     font-weight:500;
     color:#c084fc;
@@ -131,7 +104,7 @@ body::before{
     padding:0 20px 6px 20px;
 }
 
-/* INPUT AREA */
+/* INPUT */
 .input-area{
     display:flex;
     gap:10px;
@@ -150,18 +123,40 @@ input{
 }
 
 button{
-    background:linear-gradient(90deg,#7c3aed,#a855f7);
     border:none;
     padding:10px 14px;
     border-radius:12px;
     color:white;
     cursor:pointer;
     font-weight:500;
-    white-space:nowrap;
 }
 
-button:hover{
-    opacity:0.9;
+#sendBtn{
+    background:linear-gradient(90deg,#7c3aed,#a855f7);
+}
+
+#emojiBtn{
+    background:#352a54;
+}
+
+/* DONT PRESS */
+#dontPressBtn{
+    position:absolute;
+    bottom:15px;
+    right:20px;
+    background:#1b102c;
+    color:#ff4d6d;
+    border:1px solid #ff4d6d;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    transition:0.3s;
+}
+
+#dontPressBtn:hover{
+    background:#ff4d6d;
+    color:white;
+    transform:scale(1.05);
 }
 
 /* EMOJI PANEL */
@@ -188,15 +183,8 @@ button:hover{
 
 <div class="chat-card">
 
-  <div class="cat">
-<svg viewBox="0 0 100 100">
-    <circle cx="50" cy="55" r="30" fill="#000"/>
-    <polygon points="30,35 40,15 50,35" fill="#000"/>
-    <polygon points="50,35 60,15 70,35" fill="#000"/>
-    <circle cx="40" cy="55" r="4" fill="#fff"/>
-    <circle cx="60" cy="55" r="4" fill="#fff"/>
-</svg>
-</div>
+    <div class="cat">🐱</div>
+
     <div class="chat-header">🌙 ABYSS MESSENGER</div>
 
     <div class="messages" id="messages"></div>
@@ -208,8 +196,9 @@ button:hover{
         <input type="text" id="messageInput" placeholder="Scrie mesaj...">
         <button id="emojiBtn">😊</button>
         <button id="sendBtn">Trimite</button>
-        <button id="dontPressBtn" class="dont-press">Don't Press</button>
     </div>
+
+    <button id="dontPressBtn">Don't Press</button>
 
     <div class="emoji-panel" id="emojiPanel">
         <span>😊</span><span>😂</span><span>😍</span>
@@ -229,13 +218,13 @@ const sendBtn=document.getElementById("sendBtn");
 const emojiBtn=document.getElementById("emojiBtn");
 const emojiPanel=document.getElementById("emojiPanel");
 const typingIndicator=document.getElementById("typingIndicator");
+const dontPressBtn=document.getElementById("dontPressBtn");
 
 /* SEND */
 function sendMessage(){
     const message=input.value.trim();
     const username=usernameInput.value.trim();
     if(!message||!username)return;
-
     socket.emit("send_message",{username,message});
     input.value="";
 }
@@ -256,36 +245,7 @@ socket.on("receive_message",data=>{
     messages.appendChild(div);
     messages.scrollTop=messages.scrollHeight;
 });
-socket.on("receive_message", (data) => {
 
-});
-
-
-
-
-const dontPressBtn = document.getElementById("dontPressBtn");
-
-dontPressBtn.addEventListener("click", () => {
-
-    const funnyMessages = [
-        "😑 I told you not to press it nigga",
-        "🙄 Why are you like this?",
-        "👁 Jeffrey Epstein is watching...",
-        "🐈 The black cat is disappointed.",
-        "💀Rip my Granny she got hit by a bazooka."
-    ];
-
-    const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add("message");
-    messageDiv.innerHTML = `<strong>Abyss:</strong> ${randomMessage}`;
-
-    document.getElementById("messages").appendChild(messageDiv);
-    document.getElementById("messages").scrollTop =
-        document.getElementById("messages").scrollHeight;
-
-});
 /* TYPING */
 input.addEventListener("input",()=>{
     const username=usernameInput.value.trim();
@@ -309,10 +269,24 @@ emojiPanel.querySelectorAll("span").forEach(emoji=>{
         emojiPanel.style.display="none";
     };
 });
+
+/* DONT PRESS */
+dontPressBtn.onclick=()=>{
+    const funny=[
+        "😑 I literally said don't press nigga.",
+        "🙄 Why can't you follow instructions?",
+        "👁 Jeffrey Epstein is watching you.",
+        "🐱 The cat judges you.",
+        "💀 Rip my granny she got hit by a bazooka."
+    ];
+    const random=funny[Math.floor(Math.random()*funny.length)];
+    const div=document.createElement("div");
+    div.classList.add("message");
+    div.innerHTML=`<div class="username">Abyss</div><div>${random}</div>`;
+    messages.appendChild(div);
+    messages.scrollTop=messages.scrollHeight;
+};
 </script>
 
 </body>
 </html>
-
-
-
