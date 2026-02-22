@@ -17,7 +17,9 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("User connected");
-
+socket.on("typing", (username) => {
+  socket.broadcast.emit("user_typing", username);
+});
   socket.on("send_message", (data) => {
     console.log("Message received:", data);
 
@@ -31,3 +33,4 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
