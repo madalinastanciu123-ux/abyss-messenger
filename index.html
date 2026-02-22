@@ -13,16 +13,16 @@
 body {
     margin: 0;
     height: 100vh;
-    background: #0b0815;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #0b0815;
     font-family: 'Inter', sans-serif;
-    overflow: hidden;
     color: white;
+    overflow: hidden;
 }
 
-/* STAR BACKGROUND */
+/* ⭐ STARS */
 body::before {
     content: "";
     position: fixed;
@@ -33,17 +33,18 @@ body::before {
         radial-gradient(2px 2px at 40% 40%, white, transparent),
         radial-gradient(2px 2px at 60% 10%, white, transparent),
         radial-gradient(2px 2px at 80% 60%, white, transparent),
-        radial-gradient(2px 2px at 90% 30%, white, transparent);
-    opacity: 0.7;
+        radial-gradient(2px 2px at 90% 30%, white, transparent),
+        radial-gradient(2px 2px at 50% 85%, white, transparent),
+        radial-gradient(2px 2px at 15% 55%, white, transparent);
+    opacity: 0.8;
 }
 
-/* CHAT CARD */
 .chat-card {
     width: 95%;
     max-width: 480px;
     height: 90vh;
     max-height: 680px;
-    background: rgba(24,18,44,0.95);
+    background: rgba(24,18,44,0.97);
     border-radius: 24px;
     display: flex;
     flex-direction: column;
@@ -51,7 +52,6 @@ body::before {
     overflow: hidden;
 }
 
-/* HEADER */
 .chat-header {
     padding: 20px;
     text-align: center;
@@ -61,7 +61,6 @@ body::before {
     background: linear-gradient(90deg,#6d28d9,#9333ea);
 }
 
-/* MESSAGES */
 .messages {
     flex: 1;
     padding: 20px;
@@ -71,7 +70,6 @@ body::before {
     gap: 14px;
 }
 
-/* MESSAGE */
 .message-wrapper {
     max-width: 75%;
 }
@@ -99,13 +97,14 @@ body::before {
     background: #7c3aed;
 }
 
-/* INPUT AREA */
+/* INPUT */
 .chat-input {
     padding: 15px;
     background: #1a142d;
     display: flex;
     gap: 8px;
     align-items: center;
+    position: relative;
 }
 
 .chat-input input {
@@ -115,6 +114,7 @@ body::before {
     background: #352a54;
     color: white;
     font-size: 14px;
+    outline: none;
 }
 
 #usernameInput {
@@ -125,7 +125,7 @@ body::before {
     flex: 1;
 }
 
-.chat-input button {
+button {
     padding: 10px 14px;
     border-radius: 12px;
     border: none;
@@ -140,6 +140,25 @@ body::before {
 
 #emojiBtn {
     background: #352a54;
+    font-size: 18px;
+}
+
+/* EMOJI PANEL */
+.emoji-panel {
+    position: absolute;
+    bottom: 70px;
+    right: 10px;
+    background: #1e1835;
+    padding: 10px;
+    border-radius: 12px;
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 200px;
+}
+
+.emoji-panel span {
+    cursor: pointer;
     font-size: 18px;
 }
 </style>
@@ -157,11 +176,16 @@ body::before {
         <input id="messageInput" placeholder="Scrie mesaj...">
         <button id="emojiBtn">😊</button>
         <button id="sendBtn">Trimite</button>
+
+        <div id="emojiPanel" class="emoji-panel">
+            <span>😀</span><span>😂</span><span>😍</span><span>🥺</span>
+            <span>😎</span><span>🔥</span><span>💜</span><span>🌙</span>
+            <span>✨</span><span>😭</span><span>😈</span><span>💀</span>
+        </div>
     </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
 
 <script>
 const socket = io();
@@ -170,33 +194,23 @@ const input = document.getElementById("messageInput");
 const usernameInput = document.getElementById("usernameInput");
 const sendBtn = document.getElementById("sendBtn");
 const emojiBtn = document.getElementById("emojiBtn");
+const emojiPanel = document.getElementById("emojiPanel");
 
-/* EMOJI PICKER */
-let pickerOpen = false;
-let picker;
-
+/* TOGGLE EMOJI */
 emojiBtn.onclick = () => {
-    if (!pickerOpen) {
-        picker = new EmojiMart.Picker({
-            theme: "dark",
-            onEmojiSelect: (emoji) => {
-                input.value += emoji.native;
-            }
-        });
-
-        picker.style.position = "absolute";
-        picker.style.bottom = "80px";
-        picker.style.right = "30px";
-
-        document.body.appendChild(picker);
-        pickerOpen = true;
-    } else {
-        picker.remove();
-        pickerOpen = false;
-    }
+    emojiPanel.style.display =
+        emojiPanel.style.display === "flex" ? "none" : "flex";
 };
 
-/* SEND MESSAGE */
+/* ADD EMOJI */
+emojiPanel.querySelectorAll("span").forEach(e => {
+    e.onclick = () => {
+        input.value += e.textContent;
+        input.focus();
+    };
+});
+
+/* SEND */
 function sendMessage() {
     const message = input.value.trim();
     const username = usernameInput.value.trim();
@@ -241,4 +255,4 @@ socket.on("receive_message", data => {
 </script>
 
 </body>
-</html>#
+</html>
