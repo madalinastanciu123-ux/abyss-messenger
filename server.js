@@ -10,24 +10,20 @@ app.use(express.static(__dirname));
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "*" }
+  cors: {
+    origin: "*"
+  }
 });
 
 io.on("connection", (socket) => {
-
-  socket.on("join_room", (room) => {
-    socket.join(room);
-  });
+  console.log("User connected");
 
   socket.on("send_message", (data) => {
-    if (!data.room) return;
+    console.log("Message received:", data);
 
-    io.to(data.room).emit("receive_message", {
-      user: data.user,
-      text: data.text
-    });
+    // trimite mesajul tuturor
+    io.emit("receive_message", data);
   });
-
 });
 
 const PORT = process.env.PORT || 3001;
