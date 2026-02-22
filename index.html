@@ -19,7 +19,7 @@ body {
     background: #0b0815;
     font-family: 'Inter', sans-serif;
     color: white;
-    overflow: hidden;
+    
 }
 
 /* ⭐ STARS */
@@ -68,6 +68,8 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    scroll-behavior: smooth;
+-webkit-overflow-scrolling: touch;
 }
 
 .message-wrapper {
@@ -269,6 +271,7 @@ socket.on("receive_message", data => {
 
 </body>
 </html>
+
 
 
 
