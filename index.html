@@ -195,7 +195,7 @@ const usernameInput = document.getElementById("usernameInput");
 const sendBtn = document.getElementById("sendBtn");
 const emojiBtn = document.getElementById("emojiBtn");
 const emojiPanel = document.getElementById("emojiPanel");
-
+const typingIndicator = document.getElementById("typingIndicator");
 /* TOGGLE EMOJI */
 emojiBtn.onclick = () => {
     emojiPanel.style.display =
@@ -256,4 +256,5 @@ socket.on("receive_message", data => {
 
 </body>
 </html>
+
 
